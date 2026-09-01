@@ -1,6 +1,7 @@
 # Legacy Skills
 
-[![skills.sh](https://skills.sh/b/hyetigran/legacy-skills)](https://skills.sh/hyetigran/legacy-skills)
+[![Install legacy-audit from skills.sh](https://img.shields.io/badge/skills.sh-legacy--audit-111111?logo=vercel&logoColor=white)](https://skills.sh/hyetigran/legacy-skills/legacy-audit)
+[![Install legacy-migration from skills.sh](https://img.shields.io/badge/skills.sh-legacy--migration-111111?logo=vercel&logoColor=white)](https://skills.sh/hyetigran/legacy-skills/legacy-migration)
 
 Two complementary agent skills for understanding and modernizing legacy codebases without carrying their hidden problems into a rewrite.
 
