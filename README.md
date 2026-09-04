@@ -53,5 +53,6 @@ npx skills@latest add hyetigran/legacy-skills \
 
 - [`legacy-audit`](skills/legacy-audit/SKILL.md)
 - [`legacy-migration`](skills/legacy-migration/SKILL.md)
+- [Five-repository audit program](example/README.md)
 
 Each skill includes its own references and reusable artifact templates.
