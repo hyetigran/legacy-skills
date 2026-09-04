@@ -18,9 +18,8 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <col style="width: 15%" />
 <col style="width: 16%" />
 <col style="width: 20%" />
-<col style="width: 18%" />
-<col style="width: 18%" />
-<col style="width: 12%" />
+<col style="width: 27%" />
+<col style="width: 21%" />
 </colgroup>
 <thead>
 <tr>
@@ -28,7 +27,6 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <th>Repository</th>
 <th>Primary stack</th>
 <th>Repository scale</th>
-<th>Modules / structural units</th>
 <th>Audit status and coverage</th>
 <th>Findings</th>
 </tr>
@@ -39,7 +37,6 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <td><a href="../../audit-five/openmrs-core">OpenMRS</a></td>
 <td>Java, XML, Maven</td>
 <td>1,898 tracked files; ≈166K production Java LOC</td>
-<td>8 Maven reactor modules</td>
 <td><strong>Complete</strong> — 345 analyses; 1,163 observations</td>
 <td>80 (22 C / 36 H / 18 M / 4 L)</td>
 </tr>
@@ -48,7 +45,6 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <td><a href="../../audit-five/Koha">Koha</a></td>
 <td>Perl, Template Toolkit, JS/Vue, SQL</td>
 <td>8,269 tracked files; ≈490K Perl lines</td>
-<td>1,308 <code>.pm</code> modules in <code>Koha/</code> + <code>C4/</code>; 6 audited slices</td>
 <td><strong>Complete</strong> — 873 reports across the six slices</td>
 <td>62 (22 C / 30 H / 10 M / 0 L)</td>
 </tr>
@@ -57,7 +53,6 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <td><a href="../../audit-five/civicrm-core">CiviCRM</a></td>
 <td>PHP, Smarty, JavaScript, MySQL</td>
 <td>7,923 tracked files; &gt;1.1M executable/source lines</td>
-<td>43 bundled extension directories; 5 audit passes</td>
 <td><strong>Complete</strong> — 1,504 production-source mappings; 1,529 audit documents</td>
 <td>62 (13 C / 38 H / 8 M / 3 L)</td>
 </tr>
@@ -66,7 +61,6 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <td><a href="../../audit-five/dolibarr">Dolibarr</a></td>
 <td>PHP, JavaScript, SQL</td>
 <td>15,617 tracked files; ≈1.95M PHP lines</td>
-<td>≈100 web-root/module directories; 12 logical audit parts</td>
 <td><strong>Complete</strong> — full logical-part coverage with source-count reconciliation</td>
 <td>655 (101 C / 396 H / 120 M / 38 L)</td>
 </tr>
@@ -75,7 +69,6 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <td><a href="../../audit-five/odoo">Odoo</a></td>
 <td>Python, XML, JavaScript/TypeScript, PostgreSQL</td>
 <td>48,195 tracked files; ≈3.08M Python/JS/TS/XML lines</td>
-<td>662 manifest-defined modules</td>
 <td><strong>In progress</strong> — 72/20,056 module source-file analyses; 0/662 modules complete</td>
 <td>—</td>
 </tr>
@@ -84,7 +77,7 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 
 Purpose and high-level results are detailed in the repository sections below.
 
-LOC values are physical sizing signals taken from each audit's baseline inventory, not normalized semantic SLOC, and their included file types differ. “Modules / structural units” uses the ecosystem's native decomposition, so Maven modules, Perl module files, extension directories, audit parts, and Odoo manifests should not be compared as equivalent units. “Complete” retains each audit's declared boundary: Koha and CiviCRM are bounded audits, while Dolibarr uses complete logical-part reconciliation.
+LOC values are physical sizing signals taken from each audit's baseline inventory, not normalized semantic SLOC, and their included file types differ. “Complete” retains each audit's declared boundary: Koha and CiviCRM are bounded audits, while Dolibarr uses complete logical-part reconciliation.
 
 ## Audit 1 — OpenMRS
 
