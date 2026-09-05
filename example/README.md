@@ -8,7 +8,7 @@ This folder tracks the five repositories being used to exercise and validate the
 4. Dolibarr
 5. Odoo
 
-The live status, purpose, and available results are in [AUDIT-SUMMARY.md](./AUDIT-SUMMARY.md). OpenMRS, Koha, CiviCRM, and Dolibarr are complete. Odoo is in progress.
+The live status, purpose, and available results are in [AUDIT-SUMMARY.md](./AUDIT-SUMMARY.md). All five audits are complete; runtime-backed reproduction and remediation prioritization remain follow-up work.
 
 ## Evidence model
 
@@ -34,7 +34,7 @@ It does not become a second bug catalog. Every reported finding must point to a 
 Update [AUDIT-SUMMARY.md](./AUDIT-SUMMARY.md) at three points:
 
 - when an audit starts, record its scope, exclusions, and runtime-recon status;
-- while it is in progress, report coverage and provisional themes without publishing uncited findings as conclusions; and
+- after completion, preserve the catalog as the audit boundary and distinguish static findings from runtime-backed reproduction; and
 - when it completes, import the severity tally, top findings, confidence limits, and workflow lessons from the final catalog.
 
 If an audit is partial, state exactly which areas were read cover to cover, skimmed, or excluded. Do not combine partial and complete audits without showing that distinction.

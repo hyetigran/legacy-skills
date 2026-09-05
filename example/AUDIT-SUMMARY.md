@@ -1,14 +1,14 @@
 # Five-Repository Legacy Audit Summary
 
-> Status as of 2026-09-04. This is the program-level rollup; repository audit artifacts remain the source of truth for findings.
+> Status as of 2026-09-05. This is the program-level rollup; repository audit artifacts remain the source of truth for findings.
 
 ## Executive summary
 
-This program tests the `legacy-audit` workflow against five materially different legacy-code challenges. OpenMRS, Koha, CiviCRM, and Dolibarr are complete; Odoo is in progress. Overall progress is **four of five audits complete**.
+This program tests the `legacy-audit` workflow against five materially different legacy-code challenges. OpenMRS, Koha, CiviCRM, Dolibarr, and Odoo are complete. Overall progress is **five of five audits complete**.
 
 The sequence is deliberate. It starts by checking whether a method first exercised on OpenEMR transfers to OpenMRS, moves into genuine Perl archaeology with Koha, then tests adapters and compatibility layers in CiviCRM. Dolibarr tests financial and multi-entity correctness and expands that inquiry across a full ERP codebase. Odoo is the final scale test: a manifest-driven audit across a highly modular platform.
 
-The four completed catalogs contain **859 deduplicated root causes: 158 critical, 500 high, 156 medium/systemic, and 45 low**. All four audits are static reviews with runtime-verification limits, so these figures describe cataloged code risks rather than confirmed exploitability in every deployment. Odoo has no central catalog yet and is excluded from the totals.
+The five completed catalogs contain **1,491 deduplicated root causes: 181 critical, 770 high, 405 medium/systemic, and 135 low**. All five audits are static reviews with runtime-verification limits, so these figures describe cataloged code risks rather than confirmed exploitability in every deployment.
 
 ## Program status
 
@@ -68,9 +68,9 @@ The four completed catalogs contain **859 deduplicated root causes: 158 critical
 <td style="width: 1% !important; min-width: 10px; max-width: 10px !important; padding: 0">5</td>
 <td><a href="../../audit-five/odoo">Odoo</a></td>
 <td>Python, XML, JavaScript/TypeScript, PostgreSQL</td>
-<td>48,195 tracked files; ≈3.08M Python/JS/TS/XML lines</td>
-<td><strong>In progress</strong> — 72/20,056 module source-file analyses; 0/662 modules complete</td>
-<td>—</td>
+<td>48,195 tracked files; ≈3.34M included source LOC</td>
+<td><strong>Complete</strong> — 22,056 direct analyses; 0 first-party files pending</td>
+<td>632 (23 C / 270 H / 249 M / 90 L)</td>
 </tr>
 </tbody>
 </table>
@@ -170,9 +170,9 @@ PHP was unavailable and the Docker daemon could not run, so no runtime or integr
 
 **Purpose:** test whether the audit process can establish and defend subsystem boundaries inside a very large modular application.
 
-**Status:** in progress.
+**Status:** complete.
 
-**Evidence to date:** baseline `f7449ec73ab5679d3a95b411a43081d3646f950e`, Odoo 19.0, audit started 2026-09-03. The inventory contains 662 manifest-defined modules and 20,056 Python, JavaScript, TypeScript, and XML source-bearing files inside those modules. As of 2026-09-04, 72 file analyses are complete in the mandatory `base` module; no module is complete and the central catalog has not started. Source tracker: `audit-five/odoo/docs/AUDIT-TRACKER.md`.
+**Evidence:** baseline `f7449ec73ab5679d3a95b411a43081d3646f950e`, Odoo 19.0, audit completed 2026-09-05. The final coverage gate closes all **665 manifest-defined modules**, **22,471 included source-bearing files**, and **3,339,631 included LOC**, with **22,056 direct per-file analyses**, 415 vendored files handled through provenance inventory, and zero pending first-party files. The catalog contains **632 root causes: 23 critical, 270 high, 249 medium, and 90 low**. Sources: `audit-five/odoo/docs/AUDIT-COVERAGE.md` and `audit-five/odoo/docs/BUGS-MITIGATIONS.md`.
 
 The full-codebase scope requires the workflow to:
 
@@ -181,7 +181,13 @@ The full-codebase scope requires the workflow to:
 - declare read-cover-to-cover, skim, and excluded areas without implying whole-repository coverage; and
 - synthesize findings without losing citations across subsystem boundaries.
 
-Current candidate themes include dependent-row deletion, stale reference updates, non-atomic merge commits, unenforced precision safeguards, upload memory pressure, and incomplete user-deletion cleanup. They remain analysis candidates, not cataloged findings.
+**High-level findings:**
+
+- Weakly scoped public and administrative boundaries can expose records or permit state changes without an owning-record authorization check; the catalog counts 46 security/authorization findings.
+- Localization, tax-report, payment, POS, and financial configuration paths contain invariant and carryover risks that can misstate or mispost accounting results.
+- Installation, module loading, server actions, asset handling, external integrations, and credential-bearing payment paths create privileged execution and trust-boundary risks.
+- Test and fixture isolation gaps can hide regressions or make assertions pass against unrelated state; verification findings are the largest category at 218.
+- Data-integrity findings total 152 and reliability/maintainability findings total 216, including deletion, transaction, cache, indexing, and partial-success failure modes.
 
 The application could not start because the environment lacks the declared Babel dependency and has no database or service configuration. This is an audit-environment limitation, not an Odoo defect.
 
@@ -193,22 +199,22 @@ The application could not start because the environment lacks the declared Babel
 | Koha          |       22 |      30 |      10 |      0 |      62 | Complete six-slice static catalog; representative deployment verification pending |
 | CiviCRM       |       13 |      38 |       8 |      3 |      62 | Complete five-pass static catalog; integrated runtime verification pending        |
 | Dolibarr      |      101 |     396 |     120 |     38 |     655 | Complete logical-part static catalog; runtime verification pending                |
-| Odoo          |        — |       — |       — |      — |       — | In progress; central catalog not started                                          |
-| **Portfolio** |  **158** | **500** | **156** | **45** | **859** | Aggregates the four completed catalogs only                                       |
+| Odoo          |       23 |     270 |     249 |     90 |     632 | Complete 665-module static catalog; runtime verification pending                  |
+| **Portfolio** |  **181** | **770** | **405** | **135** | **1,491** | Aggregates all five completed catalogs                                           |
 
 Koha calls its third tier “medium/systemic”; it is included in the Medium column for rollup purposes. Dolibarr's configuration-dependent findings remain included at their assigned severity. “No result yet” is distinct from a zero count.
 
 ## Cross-repository conclusions
 
-The four completed catalogs support five shared conclusions:
+The five completed catalogs support five shared conclusions:
 
 1. **Authorization is optional or caller-owned instead of intrinsic to the domain boundary.** OpenMRS relies on annotations and proxy interception that can be omitted or bypassed (`F-001`–`F-003`, `F-023`); Koha depends on individual CGI/OpenAPI callers to enforce actor, target, branch, fund, or object scope (Critical findings 1–4 and 22; Medium/systemic finding 2); CiviCRM feature-level checks frequently trust caller-selected Contact, Participant, payment, contribution, or child-record IDs (`CON-001`–`CON-004`, `PAY-003`, `PAY-004`, `EVT-001`, `EVT-002`); Dolibarr repeats the pattern across tenant, customer, parent/child, financial, warehouse, user, and administrative targets (`F-009`, `F-107`–`F-185`, `F-210`–`F-455`, `F-635`–`F-655`).
 2. **Multi-object state changes lack reliable transaction and idempotency boundaries.** OpenMRS exposes races and duplicate effects in clinical merge, HL7, scheduler, and outbox paths (`F-009`, `F-012`–`F-015`, `F-020`); Koha separately commits circulation, financial, catalog, acquisition, serial, plugin, notice, and index state (Critical findings 11–18 and 21; High findings 7, 9, 11, 16, 25); CiviCRM can split gateway, contribution, participant, cart, fulfillment, installation, and schema state across unrecoverable partial commits (`PAY-009`, `PAY-011`, `INST-004`, `INST-007`, `EVT-006`–`EVT-008`); Dolibarr's invoice, direct-debit, bank, bookkeeping, stock, mailing, and public-payment workflows show the same failure mode (`F-345`–`F-464`, `F-558`, `F-559`).
 3. **Extension and integration surfaces inherit more trust than their provenance warrants.** OpenMRS modules, datatype handlers, templates, and serializers can reach trusted execution or stored content (`F-006`, `F-050`–`F-052`, `F-065`); Koha invokes request-selected payment plugins before authentication and lets plugins participate inside fragile multi-step workflows (Critical finding 19; Medium/systemic finding 3); CiviCRM accepts forgeable processor callbacks and exposes critical behavior through optional Event Cart, CMS adapters, legacy endpoints, and extension-defined settings (`PAY-001`, `PAY-002`, `EVT-003`, `INST-010`); Dolibarr extends the pattern across SOAP, MCP/AI, OAuth/OIDC, payment, WebDAV, email, PBX, LDAP, module, and package-import boundaries (`F-015`–`F-091`, `F-554`–`F-580`, `F-619`–`F-650`).
 4. **Systems can report or record success before durable success is known.** OpenMRS work claims and lease recovery can duplicate side effects (`F-009`, `F-020`, `F-027`); Koha's Zebra and Elasticsearch paths can discard failed indexing work while reporting completion (Critical finding 21; High finding 22); CiviCRM can record recurring cancellation after provider failure or accept gateway success without completing local registration (`PAY-009`, `PAY-011`, `EVT-007`); Dolibarr setup, migration, payment, mailing, and scheduled work contains early acknowledgement, partial commits, and non-atomic claims (`F-186`–`F-209`, `F-290`, `F-358`–`F-372`, `F-438`, `F-558`, `F-559`).
-5. **Parallel compatibility paths multiply policy drift.** OpenMRS authorization varies with annotations, proxy entry, legacy encoders, and module surfaces; Koha carries CGI, OPAC, REST, offline, plugin, Zebra, and Elasticsearch paths with different assumptions; CiviCRM spans CMS/Standalone hosts, API3/API4, forms/AJAX, payment adapters, and bundled extensions; Dolibarr spans browser controllers, REST, SOAP, MCP, public handlers, optional modules, multi-entity sharing rules, and older operational tooling. In all four systems, fixing one route or framework layer is insufficient unless the underlying domain boundary becomes mandatory.
+5. **Parallel compatibility paths multiply policy drift.** OpenMRS authorization varies with annotations, proxy entry, legacy encoders, and module surfaces; Koha carries CGI, OPAC, REST, offline, plugin, Zebra, and Elasticsearch paths with different assumptions; CiviCRM spans CMS/Standalone hosts, API3/API4, forms/AJAX, payment adapters, and bundled extensions; Dolibarr spans browser controllers, REST, SOAP, MCP, public handlers, optional modules, multi-entity sharing rules, and older operational tooling; Odoo spans the server core, 665 manifests, localization modules, web/POS clients, payment providers, and install-time data. In all five systems, fixing one route or framework layer is insufficient unless the underlying domain boundary becomes mandatory.
 
-The workflow result is equally important: OpenMRS demonstrated large-scale observation deduplication, Koha demonstrated defensible subsystem scoping, CiviCRM demonstrated cross-adapter trust tracing through five overlapping vertical passes, and Dolibarr demonstrated full-codebase logical-part reconciliation. Dolibarr also shows the cost of scope expansion: its 655-finding catalog is substantially harder to triage than the bounded catalogs. All catalogs preserve code locations, but Koha currently numbers findings within severity sections rather than assigning globally stable IDs; future catalogs should use stable IDs so cross-document references survive reordering.
+The workflow result is equally important: OpenMRS demonstrated large-scale observation deduplication, Koha demonstrated defensible subsystem scoping, CiviCRM demonstrated cross-adapter trust tracing through five overlapping vertical passes, Dolibarr demonstrated full-codebase logical-part reconciliation, and Odoo demonstrated deterministic coverage gating across a manifest-driven platform at 22k+ source files. Dolibarr and Odoo also show the cost of scope expansion: their 655- and 632-finding catalogs are substantially harder to triage than the bounded catalogs. All catalogs preserve code locations, but Koha currently numbers findings within severity sections rather than assigning globally stable IDs; future catalogs should use stable IDs so cross-document references survive reordering.
 
 ## Immediate updates needed
 
@@ -216,6 +222,6 @@ The workflow result is equally important: OpenMRS demonstrated large-scale obser
 2. Reproduce Koha's highest-severity paths in a representative deployment before disclosure or remediation prioritization.
 3. Reproduce CiviCRM's critical setup, payment-callback, Contact/Participant authorization, and Event Cart paths in disposable CMS and Standalone environments.
 4. Triage Dolibarr's P0 set, then retest with global administrators, tenant administrators, restricted users, and external users while asserting both denial and absence of financial, stock, configuration, or cross-tenant side effects.
-5. Continue Odoo's manifest-driven file pass; do not publish candidate themes as findings or start the central catalog before the declared completion rule is met.
+5. Reproduce Odoo's highest-severity authorization, accounting, credential, and destructive-operation findings with a working dependency/database environment before remediation or disclosure decisions.
 
-The four completed audits can individually enter migration comparison once their runtime-verification limits and business constraints are understood. The five-repository program remains incomplete until Odoo's declared scope and central catalog are finished.
+The five completed audits can individually enter migration comparison once their runtime-verification limits and business constraints are understood. The five-repository static audit program is complete; the next phase is deployment-backed reproduction and remediation prioritization.
